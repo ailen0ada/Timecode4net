@@ -10,14 +10,18 @@ namespace TimeCode4net.Tests
     public class TimeCodeTests
     {
         [Theory]
-        [InlineData(18000, FrameRate.fps29_97, false, "00:10:00:00")]
-        [InlineData(17982, FrameRate.fps29_97, true, "00:10:00;00")]
-        [InlineData(15000, FrameRate.fps25, false, "00:10:00:00")]
-        [InlineData(3599, FrameRate.fps29_97, false, "00:01:59:29")]
-        [InlineData(3004, FrameRate.fps25, false, "00:02:00:04")]
-        [InlineData(3597, FrameRate.fps29_97, true, "00:02:00;01")]
-        [InlineData(3601, FrameRate.fps29_97, false, "00:02:00:01")]
-        [InlineData(3001, FrameRate.fps25, false, "00:02:00:01")]
+        [InlineData(1800, FrameRate.fps29_97, true, "00:01:00;02")]
+        [InlineData(3600, FrameRate.fps59_94, true, "00:01:00:04")]
+        [InlineData(1387252, FrameRate.fps29_97, true, "12:51:28;00")]
+        [InlineData(215999, FrameRate.fps59_94, true, "01:00:03:35")]
+        [InlineData(215999, FrameRate.fps29_97, false, "01:59:59:29")]
+        [InlineData(215999, FrameRate.fps23_98, false, "02:29:59:23")]
+        [InlineData(1800, FrameRate.fps23_98, false, "00:01:15:00")]
+        [InlineData(1800, FrameRate.fps24, false, "00:01:15:00")]
+        [InlineData(1800, FrameRate.fps25, false, "00:01:12:00")]
+        [InlineData(1800, FrameRate.fps30, false, "00:01:00:00")]
+        [InlineData(1800, FrameRate.fps50, false, "00:00:36:00")]
+        [InlineData(1800, FrameRate.fps60, false, "00:00:30:00")]
         public void CreateTest(int frames, FrameRate frameRate, bool isDropFrame, string expected)
         {
             var actual = new TimeCode(frames, frameRate, isDropFrame);

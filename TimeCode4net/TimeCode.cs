@@ -85,16 +85,19 @@ namespace TimeCode4net
             this.Seconds = frames % totalFramesInHour % totalFramesInMinute / this._frameRate;
             this.Frames = frames % totalFramesInHour % totalFramesInMinute % this._frameRate;
 
-            if (this._isDropFrame && this.Frames == 0 && this.Minutes % 10 > 0)
+            if (this._isDropFrame)
             {
-                switch (this._rawFrameRate)
+                if (this.Frames == 0 && this.Minutes % 10 != 0)
                 {
-                    case FrameRate.fps59_94:
-                        this.Frames = 4;
-                        break;
-                    case FrameRate.fps29_97:
-                        this.Frames = 2;
-                        break;
+                    switch (this._rawFrameRate)
+                    {
+                        case FrameRate.fps29_97:
+                            this.Frames = 2;
+                            break;
+                        case FrameRate.fps59_94:
+                            this.Frames = 4;
+                            break;
+                    }
                 }
             }
             UpdateTotalFrames();
@@ -112,26 +115,28 @@ namespace TimeCode4net
 
         private int CalculateDropFrames(bool fromTotalFrames)
         {
+            var totalFramesInHour = 3600 * this._frameRate;
+            var totalFramesInMinute = 60 * this._frameRate;
             if (fromTotalFrames)
             {
-                var hours =  this.TotalFrames / (3600 * this._frameRate);
-                var mins =  this.TotalFrames % (3600 * this._frameRate) / (60 * this._frameRate);
-                var extra = this.Minutes % 10 > 0 ? 1 : 0;
+                var hours = this.TotalFrames / totalFramesInHour;
+                var mins = this.TotalFrames % totalFramesInHour / totalFramesInMinute;
+                var extra = mins % 10 != 0 ? 1 : 0;
                 switch (this._rawFrameRate)
                 {
                     case FrameRate.fps29_97:
-                        return hours * 6 * 36 + mins / 10 * 36 + mins % 10 * 4 + extra * 4;
-                    case FrameRate.fps59_94:
                         return hours * 6 * 18 + mins / 10 * 18 + mins % 10 * 2 + extra * 2;
+                    case FrameRate.fps59_94:
+                        return hours * 6 * 36 + mins / 10 * 36 + mins % 10 * 4 + extra * 4;
                 }
             }
 
             switch (this._rawFrameRate)
             {
                 case FrameRate.fps29_97:
-                    return this.Hours * 6 * 36 + this.Minutes / 10 * 36 + this.Minutes % 10 * 4;
-                case FrameRate.fps59_94:
                     return this.Hours * 6 * 18 + this.Minutes / 10 * 18 + this.Minutes % 10 * 2;
+                case FrameRate.fps59_94:
+                    return this.Hours * 6 * 36 + this.Minutes / 10 * 36 + this.Minutes % 10 * 4;
                 default:
                     throw new ArgumentException("Drop frame is only supported with 29.97 or 59.94 fps.");
             }
