@@ -13,7 +13,7 @@ namespace TimeCode4net
             this._isDropFrame = isDropFrame;
             this._rawFrameRate = frameRate;
             this._frameRate = frameRate.ToInt();
-            this.Update(true);
+            this.UpdateByTotalFrames();
         }
 
         private readonly bool _isDropFrame;
@@ -64,82 +64,23 @@ namespace TimeCode4net
             return $"{this.Hours:D2}:{this.Minutes:D2}:{this.Seconds:D2}{frameSeparator}{this.Frames:D2}";
         }
 
-        private void Update(bool fromTotalFrames = false)
+        private void UpdateByTotalFrames()
         {
-            var totalFramesInHour = 3600 * this._frameRate;
-            var totalFramesInMinute = 60 * this._frameRate;
-
-            var frames = this.TotalFrames;
+            var frameCount = this.TotalFrames;
             if (this._isDropFrame)
             {
-                frames += CalculateDropFrames(fromTotalFrames);
+                // 29.97 - 2, 59.94 - 4
+                var dropFrames = this._rawFrameRate == FrameRate.fps29_97 ? 2 : 4;
+                var dropInHours = 17982 * dropFrames / 2d;
+                var dropInMinutes = 1798 * dropFrames / 2d;
+                var h = (int)Math.Floor(this.TotalFrames / dropInHours);
+                var m = this.TotalFrames % dropInHours;
+                frameCount += 9 * dropFrames * h + dropFrames * (int)Math.Floor((m - dropFrames) / dropInMinutes);
             }
-
-            this.Hours = frames / totalFramesInHour;
-            if (this.Hours > 23)
-            {
-                this.Hours %= 24;
-                frames -= 24 * totalFramesInHour;
-            }
-            this.Minutes = frames % totalFramesInHour / totalFramesInMinute;
-            this.Seconds = frames % totalFramesInHour % totalFramesInMinute / this._frameRate;
-            this.Frames = frames % totalFramesInHour % totalFramesInMinute % this._frameRate;
-
-            if (this._isDropFrame)
-            {
-                if (this.Frames == 0 && this.Minutes % 10 != 0)
-                {
-                    switch (this._rawFrameRate)
-                    {
-                        case FrameRate.fps29_97:
-                            this.Frames = 2;
-                            break;
-                        case FrameRate.fps59_94:
-                            this.Frames = 4;
-                            break;
-                    }
-                }
-            }
-            UpdateTotalFrames();
-        }
-
-        private void UpdateTotalFrames()
-        {
-            var frames = (this.Hours * 3600 + this.Minutes * 60 + this.Seconds) * this._frameRate + this.Frames;
-            if (this._isDropFrame)
-            {
-                frames -= this.CalculateDropFrames(false);
-            }
-            this.TotalFrames = frames;
-        }
-
-        private int CalculateDropFrames(bool fromTotalFrames)
-        {
-            var totalFramesInHour = 3600 * this._frameRate;
-            var totalFramesInMinute = 60 * this._frameRate;
-            if (fromTotalFrames)
-            {
-                var hours = this.TotalFrames / totalFramesInHour;
-                var mins = this.TotalFrames % totalFramesInHour / totalFramesInMinute;
-                var extra = mins % 10 != 0 ? 1 : 0;
-                switch (this._rawFrameRate)
-                {
-                    case FrameRate.fps29_97:
-                        return hours * 6 * 18 + mins / 10 * 18 + mins % 10 * 2 + extra * 2;
-                    case FrameRate.fps59_94:
-                        return hours * 6 * 36 + mins / 10 * 36 + mins % 10 * 4 + extra * 4;
-                }
-            }
-
-            switch (this._rawFrameRate)
-            {
-                case FrameRate.fps29_97:
-                    return this.Hours * 6 * 18 + this.Minutes / 10 * 18 + this.Minutes % 10 * 2;
-                case FrameRate.fps59_94:
-                    return this.Hours * 6 * 36 + this.Minutes / 10 * 36 + this.Minutes % 10 * 4;
-                default:
-                    throw new ArgumentException("Drop frame is only supported with 29.97 or 59.94 fps.");
-            }
+            this.Frames = frameCount % this._frameRate;
+            this.Seconds = (int) Math.Floor(frameCount / (double) this._frameRate) % 60;
+            this.Minutes = (int) Math.Floor(frameCount / (this._frameRate * 60d)) % 60;
+            this.Hours = (int)Math.Floor(frameCount / (this._frameRate * 60 * 60d)) % 24;
         }
     }
 }
