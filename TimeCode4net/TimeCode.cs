@@ -8,12 +8,11 @@ namespace TimeCode4net
 {
     public class TimeCode
     {
-
         public static TimeCode FromFrames(int totalFrames, FrameRate frameRate, bool isDropFrame)
         {
             FrameRateSanityCheck(frameRate, isDropFrame);
 
-            var tc = new TimeCode(totalFrames, frameRate, isDropFrame);
+            var tc = new TimeCode(frameRate, isDropFrame) {TotalFrames = totalFrames};
             tc.UpdateByTotalFrames();
             return tc;
         }
@@ -34,7 +33,17 @@ namespace TimeCode4net
             {
                 throw new ArgumentException("Input text was not in valid timecode format.", nameof(input));
             }
-            return null;
+
+            var tc = new TimeCode(frameRate, isDropFrame)
+            {
+                Hours = int.Parse(match.Groups["hours"].Value),
+                Minutes = int.Parse(match.Groups["minutes"].Value),
+                Seconds = int.Parse(match.Groups["seconds"].Value),
+                Frames = int.Parse(match.Groups["frames"].Value)
+            };
+            tc.UpdateTotalFrames();
+
+            return tc;
         }
 
         private static void FrameRateSanityCheck(FrameRate frameRate, bool isDropFrame)
@@ -43,11 +52,6 @@ namespace TimeCode4net
             {
                 throw new ArgumentException("Dropframe is supported with 29.97 or 59.94 fps.", nameof(isDropFrame));
             }
-        }
-
-        private TimeCode(int totalFrames, FrameRate frameRate, bool isDropFrame) : this(frameRate, isDropFrame)
-        {
-            this.TotalFrames = totalFrames;
         }
 
         private TimeCode(FrameRate frameRate, bool isDropFrame)
@@ -95,7 +99,7 @@ namespace TimeCode4net
 
         public TimeSpan ToTimeSpan()
         {
-            var tc = new TimeCode(this.TotalFrames, FrameRate.msec, false);
+            var tc = new TimeCode(FrameRate.msec, false) {TotalFrames = this.TotalFrames};
             return new TimeSpan(0, tc.Hours, tc.Minutes, tc.Seconds, tc.Frames);
         }
 
@@ -103,6 +107,22 @@ namespace TimeCode4net
         {
             var frameSeparator = this._isDropFrame ? ";" : ":";
             return $"{this.Hours:D2}:{this.Minutes:D2}:{this.Seconds:D2}{frameSeparator}{this.Frames:D2}";
+        }
+
+        private void UpdateTotalFrames()
+        {
+            var frames = this.Hours * 3600;
+            frames += this.Minutes * 60;
+            frames += this.Seconds;
+            frames *= this._frameRate;
+            frames += this.Frames;
+            if (this._isDropFrame)
+            {
+                var totalMinutes = this.Hours * 60 + this.Minutes;
+                var dropFrames = this._rawFrameRate == FrameRate.fps29_97 ? 2 : 4;
+                frames -= dropFrames * (totalMinutes - totalMinutes / 10);
+            }
+            this.TotalFrames = frames;
         }
 
         private void UpdateByTotalFrames()

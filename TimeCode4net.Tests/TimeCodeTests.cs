@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Channels;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace TimeCode4net.Tests
@@ -18,7 +13,7 @@ namespace TimeCode4net.Tests
                 () => TimeCode.FromFrames(0, FrameRate.fps23_98, true));
             Assert.Throws<ArgumentException>(
                 "isDropFrame",
-                () => TimeCode.FromString("00:01:15:00", FrameRate.fps23_98, true));
+                () => TimeCode.FromString("DROPFRAME", FrameRate.fps23_98, true));
             Assert.Throws<ArgumentNullException>(
                 "input",
                 () => TimeCode.FromString(string.Empty, FrameRate.fps23_98, false));
