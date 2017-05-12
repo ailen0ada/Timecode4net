@@ -2,18 +2,63 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TimeCode4net
 {
     public class TimeCode
     {
-        public TimeCode(int totalFrames, FrameRate frameRate, bool isDropFrame)
+        public static TimeCode FromFrames(int totalFrames, FrameRate frameRate, bool isDropFrame)
         {
-            this.TotalFrames = totalFrames;
+            FrameRateSanityCheck(frameRate, isDropFrame);
+
+            var tc = new TimeCode(frameRate, isDropFrame) {TotalFrames = totalFrames};
+            tc.UpdateByTotalFrames();
+            return tc;
+        }
+
+        private const string TimeCodePattern = @"^(?<hours>[0-2][0-9]):(?<minutes>[0-5][0-9]):(?<seconds>[0-5][0-9])[:|;|\.](?<frames>[0-9]{2,3})$";
+
+        public static TimeCode FromString(string input, FrameRate frameRate, bool isDropFrame)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            FrameRateSanityCheck(frameRate, isDropFrame);
+
+            var tcRegex = new Regex(TimeCodePattern);
+            var match = tcRegex.Match(input);
+            if (!match.Success)
+            {
+                throw new ArgumentException("Input text was not in valid timecode format.", nameof(input));
+            }
+
+            var tc = new TimeCode(frameRate, isDropFrame)
+            {
+                Hours = int.Parse(match.Groups["hours"].Value),
+                Minutes = int.Parse(match.Groups["minutes"].Value),
+                Seconds = int.Parse(match.Groups["seconds"].Value),
+                Frames = int.Parse(match.Groups["frames"].Value)
+            };
+            tc.UpdateTotalFrames();
+
+            return tc;
+        }
+
+        private static void FrameRateSanityCheck(FrameRate frameRate, bool isDropFrame)
+        {
+            if (isDropFrame && frameRate != FrameRate.fps29_97 && frameRate != FrameRate.fps59_94)
+            {
+                throw new ArgumentException("Dropframe is supported with 29.97 or 59.94 fps.", nameof(isDropFrame));
+            }
+        }
+
+        private TimeCode(FrameRate frameRate, bool isDropFrame)
+        {
             this._isDropFrame = isDropFrame;
             this._rawFrameRate = frameRate;
             this._frameRate = frameRate.ToInt();
-            this.UpdateByTotalFrames();
         }
 
         private readonly bool _isDropFrame;
@@ -54,7 +99,7 @@ namespace TimeCode4net
 
         public TimeSpan ToTimeSpan()
         {
-            var tc = new TimeCode(this.TotalFrames, FrameRate.msec, false);
+            var tc = new TimeCode(FrameRate.msec, false) {TotalFrames = this.TotalFrames};
             return new TimeSpan(0, tc.Hours, tc.Minutes, tc.Seconds, tc.Frames);
         }
 
@@ -62,6 +107,22 @@ namespace TimeCode4net
         {
             var frameSeparator = this._isDropFrame ? ";" : ":";
             return $"{this.Hours:D2}:{this.Minutes:D2}:{this.Seconds:D2}{frameSeparator}{this.Frames:D2}";
+        }
+
+        private void UpdateTotalFrames()
+        {
+            var frames = this.Hours * 3600;
+            frames += this.Minutes * 60;
+            frames += this.Seconds;
+            frames *= this._frameRate;
+            frames += this.Frames;
+            if (this._isDropFrame)
+            {
+                var totalMinutes = this.Hours * 60 + this.Minutes;
+                var dropFrames = this._rawFrameRate == FrameRate.fps29_97 ? 2 : 4;
+                frames -= dropFrames * (totalMinutes - totalMinutes / 10);
+            }
+            this.TotalFrames = frames;
         }
 
         private void UpdateByTotalFrames()
