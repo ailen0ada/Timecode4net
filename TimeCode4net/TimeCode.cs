@@ -2,18 +2,59 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TimeCode4net
 {
     public class TimeCode
     {
-        public TimeCode(int totalFrames, FrameRate frameRate, bool isDropFrame)
+
+        public static TimeCode FromFrames(int totalFrames, FrameRate frameRate, bool isDropFrame)
+        {
+            FrameRateSanityCheck(frameRate, isDropFrame);
+
+            var tc = new TimeCode(totalFrames, frameRate, isDropFrame);
+            tc.UpdateByTotalFrames();
+            return tc;
+        }
+
+        private const string TimeCodePattern = @"^(?<hours>[0-2][0-9]):(?<minutes>[0-5][0-9]):(?<seconds>[0-5][0-9])[:|;|\.](?<frames>[0-9]{2,3})$";
+
+        public static TimeCode FromString(string input, FrameRate frameRate, bool isDropFrame)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            FrameRateSanityCheck(frameRate, isDropFrame);
+
+            var tcRegex = new Regex(TimeCodePattern);
+            var match = tcRegex.Match(input);
+            if (!match.Success)
+            {
+                throw new ArgumentException("Input text was not in valid timecode format.", nameof(input));
+            }
+            return null;
+        }
+
+        private static void FrameRateSanityCheck(FrameRate frameRate, bool isDropFrame)
+        {
+            if (isDropFrame && frameRate != FrameRate.fps29_97 && frameRate != FrameRate.fps59_94)
+            {
+                throw new ArgumentException("Dropframe is supported with 29.97 or 59.94 fps.", nameof(isDropFrame));
+            }
+        }
+
+        private TimeCode(int totalFrames, FrameRate frameRate, bool isDropFrame) : this(frameRate, isDropFrame)
         {
             this.TotalFrames = totalFrames;
+        }
+
+        private TimeCode(FrameRate frameRate, bool isDropFrame)
+        {
             this._isDropFrame = isDropFrame;
             this._rawFrameRate = frameRate;
             this._frameRate = frameRate.ToInt();
-            this.UpdateByTotalFrames();
         }
 
         private readonly bool _isDropFrame;
