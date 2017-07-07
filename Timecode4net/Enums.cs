@@ -1,7 +1,7 @@
 ﻿using System;
 // ReSharper disable InconsistentNaming
 
-namespace TimeCode4net
+namespace Timecode4net
 {
     public enum FrameRate
     {
