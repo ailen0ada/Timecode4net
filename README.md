@@ -1,5 +1,5 @@
-# TimeCode4net
-`TimeCode4net` is a C# class for operations with [SMPTE timecodes](https://en.wikipedia.org/wiki/SMPTE_timecode).
+# Timecode4net
+`Timecode4net` is a C# class for operations with [SMPTE timecodes](https://en.wikipedia.org/wiki/SMPTE_timecode).
 
 [![Build status](https://ci.appveyor.com/api/projects/status/dwb6uv5cjp8tjuod?svg=true)](https://ci.appveyor.com/project/ailen0ada/timecode4net)
 
@@ -13,10 +13,10 @@
 ## Usage
 
 ```cs
-var fromFrames = TimeCode.FromFrames(frames: 1800, frameRate: FrameRate.fps29_97, isDropFrame: true);
+var fromFrames = Timecode.FromFrames(frames: 1800, frameRate: FrameRate.fps29_97, isDropFrame: true);
 Console.WriteLine(fromFrames.ToString()); // 00:01:00;02
 
-var fromString = TimeCode.FromString(input: "01:00:03;35", frameRate: FrameRate.fps59_94, isDropFrame: true);
+var fromString = Timecode.FromString(input: "01:00:03;35", frameRate: FrameRate.fps59_94, isDropFrame: true);
 Console.WriteLine(fromString.TotalFrames); // 215999
 ```
 
