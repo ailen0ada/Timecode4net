@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TimeCode4net
+namespace Timecode4net
 {
     internal static class Extensions
     {
