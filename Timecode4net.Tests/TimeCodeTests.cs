@@ -41,6 +41,7 @@ namespace Timecode4net.Tests
             new object[] {1800, FrameRate.fps29_97, true, "00:01:00;02"},
             new object[] {3600, FrameRate.fps59_94, true, "00:01:00;04"},
             new object[] {1387252, FrameRate.fps29_97, true, "12:51:28;00"},
+            new object[] {1078920, FrameRate.fps29_97, true, "10:00:00;00"},
             new object[] {215999, FrameRate.fps59_94, true, "01:00:03;35"},
             new object[] {215999, FrameRate.fps29_97, false, "01:59:59:29"},
             new object[] {215999, FrameRate.fps23_98, false, "02:29:59:23"},
