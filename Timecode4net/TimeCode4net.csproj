@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Timecode4net</PackageId>
+    <PackageVersion>1.0.1</PackageVersion>
+    <Authors>ailen0ada</Authors>
+    <Description>Timecode4net is a C# class for operations with SMPTE timecodes.</Description>
+    <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ailen0ada/Timecode4net</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>SMPTE</PackageTags>
   </PropertyGroup>
 
 </Project>
