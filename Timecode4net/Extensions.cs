@@ -2,7 +2,7 @@
 
 namespace Timecode4net
 {
-    internal static class Extensions
+    public static class Extensions
     {
         public static int ToInt(this FrameRate frameRate)
         {
