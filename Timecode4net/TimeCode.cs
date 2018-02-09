@@ -98,10 +98,9 @@ namespace Timecode4net
         }
 
         public TimeSpan ToTimeSpan()
-        {
-            var tc = new Timecode(FrameRate.msec, false) {TotalFrames = this.TotalFrames};
-            return new TimeSpan(0, tc.Hours, tc.Minutes, tc.Seconds, tc.Frames);
-        }
+		{
+			return TimeSpan.FromMilliseconds((double)TotalFrames * FrameRate.msec.ToInt() / _frameRate);
+		}
 
         public override string ToString()
         {
