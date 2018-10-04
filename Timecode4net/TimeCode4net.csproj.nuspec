@@ -3,16 +3,16 @@
 <package>
 	<metadata>
 		<id>Timecode4net</id>
-		<version>1.0.1</version>
-		<title>$title$</title>
+		<version>$version$</version>
+		<title>Timecode4net</title>
 		<authors>ailen0ada</authors>
 		<owners>$author$</owners>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<projectUrl>https://github.com/ailen0ada/Timecode4net</projectUrl>
 		<description>Timecode4net is a C# class for operations with SMPTE timecodes.</description>
 		<releaseNotes>Initial release.</releaseNotes>
-		<copyright>Copyright 2017</copyright>
-		<tags>SMPTE</tags>
+		<copyright>Copyright 2017-2018 ailen0ada</copyright>
+		<tags>SMPTE timecode</tags>
 	</metadata>
 	<files>
 		<file src="bin\*.dll" target="lib\netstandard" />
