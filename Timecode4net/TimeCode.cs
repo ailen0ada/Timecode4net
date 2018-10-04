@@ -43,6 +43,18 @@ namespace Timecode4net
             return tc;
         }
 
+        public static Timecode FromTimeSpan(TimeSpan ts, FrameRate frameRate, bool isDropFrame)
+        {
+            FrameRateSanityCheck(frameRate, isDropFrame);
+
+            var tc = new Timecode(frameRate, isDropFrame)
+            {
+                TotalFrames = (int)Math.Round(ts.TotalSeconds * frameRate.ToDouble(), MidpointRounding.AwayFromZero)
+            };
+            tc.UpdateByTotalFrames();
+            return tc;
+        }
+
         private static void FrameRateSanityCheck(FrameRate frameRate, bool isDropFrame)
         {
             if (isDropFrame && frameRate != FrameRate.fps29_97 && frameRate != FrameRate.fps59_94)
@@ -98,9 +110,10 @@ namespace Timecode4net
         }
 
         public TimeSpan ToTimeSpan()
-		{
-			return TimeSpan.FromMilliseconds((double)TotalFrames * FrameRate.msec.ToInt() / _frameRate);
-		}
+        {
+            var framesInMsec = this.TotalFrames * FrameRate.msec.ToInt() / this._rawFrameRate.ToDouble();
+            return TimeSpan.FromMilliseconds(framesInMsec);
+        }
 
         public override string ToString()
         {

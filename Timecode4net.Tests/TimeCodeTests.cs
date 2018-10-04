@@ -36,6 +36,14 @@ namespace Timecode4net.Tests
             Assert.Equal(expected, actual.TotalFrames);
         }
 
+        [Theory, MemberData(nameof(TestData))]
+        public void CreateByTimeSpanTest(int expected, FrameRate frameRate, bool isDropFrame, string input)
+        {
+            var attempt = Timecode.FromString(input, frameRate, isDropFrame).ToTimeSpan();
+            var actual = Timecode.FromTimeSpan(attempt, frameRate, isDropFrame);
+            Assert.Equal(expected, actual.TotalFrames);
+        }
+
         public static object[][] TestData =
         {
             new object[] {1800, FrameRate.fps29_97, true, "00:01:00;02"},
