@@ -6,7 +6,7 @@
 
 ## Features
 
-- supports 23.98, 24, 25, 29.97, 30, 50, 59.94, 60 fps and msec
+- supports 23.98, 24, 25, 29.97, 30, 48, 50, 59.94, 60 fps and msec
 - supports drop-frame and non-drop-frame codes
 - instantiate timecodes from frame count, string time code
 - (WIP)timecode arithmetics: adding frame counts and other timecodes

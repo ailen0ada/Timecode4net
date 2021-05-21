@@ -16,6 +16,8 @@ namespace Timecode4net
                 case FrameRate.fps29_97:
                 case FrameRate.fps30:
                     return 30;
+                case FrameRate.fps48:
+                    return 48;
                 case FrameRate.fps50:
                     return 50;
                 case FrameRate.fps59_94:
@@ -42,6 +44,8 @@ namespace Timecode4net
                     return 29.97;
                 case FrameRate.fps30:
                     return 30;
+                case FrameRate.fps48:
+                    return 48;
                 case FrameRate.fps50:
                     return 50;
                 case FrameRate.fps59_94:
