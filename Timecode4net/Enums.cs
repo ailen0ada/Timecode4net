@@ -26,6 +26,10 @@ namespace Timecode4net
         /// </summary>
         fps30,
         /// <summary>
+        ///     SMPTE 30frames/sec.
+        /// </summary>
+        fps48,
+        /// <summary>
         ///     SMPTE 50frames/sec.
         /// </summary>
         fps50,

@@ -57,6 +57,7 @@ namespace Timecode4net.Tests
             new object[] {1800, FrameRate.fps24, false, "00:01:15:00"},
             new object[] {1800, FrameRate.fps25, false, "00:01:12:00"},
             new object[] {1800, FrameRate.fps30, false, "00:01:00:00"},
+            new object[] {1800, FrameRate.fps48, false, "00:00:37:24"},
             new object[] {1800, FrameRate.fps50, false, "00:00:36:00"},
             new object[] {1800, FrameRate.fps60, false, "00:00:30:00"}
         };
