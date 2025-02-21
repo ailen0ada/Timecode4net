@@ -1,5 +1,4 @@
-﻿using System;
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable InconsistentNaming
 
 namespace Timecode4net
 {

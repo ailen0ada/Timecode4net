@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Timecode4net
 {
-    public class Timecode
+    public partial class Timecode
     {
         public static Timecode FromFrames(int totalFrames, FrameRate frameRate, bool isDropFrame)
         {
@@ -24,7 +24,7 @@ namespace Timecode4net
             }
             FrameRateSanityCheck(frameRate, isDropFrame);
 
-            var tcRegex = new Regex(TimeCodePattern);
+            var tcRegex = TimecodeRegex();
             var match = tcRegex.Match(input);
             if (!match.Success)
             {
@@ -61,7 +61,7 @@ namespace Timecode4net
             {
                 throw new ArgumentException("Dropframe is supported with 29.97 or 59.94 fps.", nameof(isDropFrame));
             }
-            if (!Enum.IsDefined(typeof(FrameRate), frameRate))
+            if (!Enum.IsDefined(frameRate))
                 throw new ArgumentOutOfRangeException(nameof(frameRate),
                     "Value should be defined in the FrameRate enum.");
         }
@@ -187,5 +187,8 @@ namespace Timecode4net
                 this.Frames = frameCount % (secondsInHour * this._frameRate) % (secondsInMinutes * this._frameRate) % this._frameRate;
             }
         }
+
+        [GeneratedRegex(TimeCodePattern)]
+        private static partial Regex TimecodeRegex();
     }
 }

@@ -6,57 +6,35 @@ namespace Timecode4net
     {
         public static int ToInt(this FrameRate frameRate)
         {
-            switch (frameRate)
+            return frameRate switch
             {
-                case FrameRate.fps23_98:
-                case FrameRate.fps24:
-                    return 24;
-                case FrameRate.fps25:
-                    return 25;
-                case FrameRate.fps29_97:
-                case FrameRate.fps30:
-                    return 30;
-                case FrameRate.fps48:
-                    return 48;
-                case FrameRate.fps50:
-                    return 50;
-                case FrameRate.fps59_94:
-                case FrameRate.fps60:
-                    return 60;
-                case FrameRate.msec:
-                    return 1000;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(frameRate), frameRate, null);
-            }
+                FrameRate.fps23_98 or FrameRate.fps24 => 24,
+                FrameRate.fps25 => 25,
+                FrameRate.fps29_97 or FrameRate.fps30 => 30,
+                FrameRate.fps48 => 48,
+                FrameRate.fps50 => 50,
+                FrameRate.fps59_94 or FrameRate.fps60 => 60,
+                FrameRate.msec => 1000,
+                _ => throw new ArgumentOutOfRangeException(nameof(frameRate), frameRate, null)
+            };
         }
 
         public static double ToDouble(this FrameRate frameRate)
         {
-            switch (frameRate)
+            return frameRate switch
             {
-                case FrameRate.fps23_98:
-                    return 23.98;
-                case FrameRate.fps24:
-                    return 24;
-                case FrameRate.fps25:
-                    return 25;
-                case FrameRate.fps29_97:
-                    return 29.97;
-                case FrameRate.fps30:
-                    return 30;
-                case FrameRate.fps48:
-                    return 48;
-                case FrameRate.fps50:
-                    return 50;
-                case FrameRate.fps59_94:
-                    return 59.94;
-                case FrameRate.fps60:
-                    return 60;
-                case FrameRate.msec:
-                    return 1;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(frameRate), frameRate, null);
-            }
+                FrameRate.fps23_98 => 24000 / 1001d,
+                FrameRate.fps24 => 24,
+                FrameRate.fps25 => 25,
+                FrameRate.fps29_97 => 30000 / 1001d,
+                FrameRate.fps30 => 30,
+                FrameRate.fps48 => 48,
+                FrameRate.fps50 => 50,
+                FrameRate.fps59_94 => 60000 / 1001d,
+                FrameRate.fps60 => 60,
+                FrameRate.msec => 1,
+                _ => throw new ArgumentOutOfRangeException(nameof(frameRate), frameRate, null)
+            };
         }
     }
 }

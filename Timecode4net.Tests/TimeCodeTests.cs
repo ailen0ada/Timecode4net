@@ -45,21 +45,22 @@ namespace Timecode4net.Tests
         }
 
         public static object[][] TestData =
-        {
-            new object[] {1800, FrameRate.fps29_97, true, "00:01:00;02"},
-            new object[] {3600, FrameRate.fps59_94, true, "00:01:00;04"},
-            new object[] {1387252, FrameRate.fps29_97, true, "12:51:28;00"},
-            new object[] {1078920, FrameRate.fps29_97, true, "10:00:00;00"},
-            new object[] {215999, FrameRate.fps59_94, true, "01:00:03;35"},
-            new object[] {215999, FrameRate.fps29_97, false, "01:59:59:29"},
-            new object[] {215999, FrameRate.fps23_98, false, "02:29:59:23"},
-            new object[] {1800, FrameRate.fps23_98, false, "00:01:15:00"},
-            new object[] {1800, FrameRate.fps24, false, "00:01:15:00"},
-            new object[] {1800, FrameRate.fps25, false, "00:01:12:00"},
-            new object[] {1800, FrameRate.fps30, false, "00:01:00:00"},
-            new object[] {1800, FrameRate.fps48, false, "00:00:37:24"},
-            new object[] {1800, FrameRate.fps50, false, "00:00:36:00"},
-            new object[] {1800, FrameRate.fps60, false, "00:00:30:00"}
-        };
+        [
+            [1800, FrameRate.fps29_97, true, "00:01:00;02"],
+            [3600, FrameRate.fps59_94, true, "00:01:00;04"],
+            [1387252, FrameRate.fps29_97, true, "12:51:28;00"],
+            [1078920, FrameRate.fps29_97, true, "10:00:00;00"],
+            [215999, FrameRate.fps59_94, true, "01:00:03;35"],
+            [215999, FrameRate.fps29_97, false, "01:59:59:29"],
+            [215999, FrameRate.fps23_98, false, "02:29:59:23"],
+            [1800, FrameRate.fps23_98, false, "00:01:15:00"],
+            [15920, FrameRate.fps23_98, false, "00:11:03:08"],
+            [1800, FrameRate.fps24, false, "00:01:15:00"],
+            [1800, FrameRate.fps25, false, "00:01:12:00"],
+            [1800, FrameRate.fps30, false, "00:01:00:00"],
+            [1800, FrameRate.fps48, false, "00:00:37:24"],
+            [1800, FrameRate.fps50, false, "00:00:36:00"],
+            [1800, FrameRate.fps60, false, "00:00:30:00"]
+        ];
     }
 }

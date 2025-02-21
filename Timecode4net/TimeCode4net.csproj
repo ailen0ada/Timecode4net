@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Timecode4net</PackageId>
     <PackageVersion>1.0.2</PackageVersion>
     <Authors>ailen0ada</Authors>
@@ -10,6 +9,8 @@
     <PackageProjectUrl>https://github.com/ailen0ada/Timecode4net</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>SMPTE</PackageTags>
+    <LangVersion>default</LangVersion>
+    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 
 </Project>
