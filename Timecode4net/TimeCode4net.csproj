@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Timecode4net</PackageId>
-    <PackageVersion>1.0.2</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <Authors>ailen0ada</Authors>
     <Description>Timecode4net is a C# class for operations with SMPTE timecodes.</Description>
     <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
