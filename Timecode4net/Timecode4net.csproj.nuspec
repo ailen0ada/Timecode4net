@@ -11,10 +11,10 @@
 		<projectUrl>https://github.com/ailen0ada/Timecode4net</projectUrl>
 		<description>Timecode4net is a C# class for operations with SMPTE timecodes.</description>
 		<releaseNotes>Initial release.</releaseNotes>
-		<copyright>Copyright 2017-2018 ailen0ada</copyright>
+		<copyright>Copyright 2017-2025 ailen0ada</copyright>
 		<tags>SMPTE timecode</tags>
 	</metadata>
 	<files>
-		<file src="bin\*.dll" target="lib\netstandard" />
+		<file src="bin\*.dll" target="lib\net80" />
 	</files>
 </package>
